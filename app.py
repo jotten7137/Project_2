@@ -1,20 +1,33 @@
 #dependencies
 import os
+from flask_sqlalchemy import SQLAlchemy
 from flask import (
     Flask,
     render_template,
     jsonify,
     request,
     redirect)
-from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','mysql:///root:password@localhost:3306/project3') 
 
 db = SQLAlchemy(app)
+class Reddit(db.Model):
+    __tablename__ = 'comments'
 
-from .model import Reddit
+    id = db.Column(db.Integer, primary_key=True)
+    author = db.Column(db.String(64))
+    body = db.Column(db.String(64))
+    created_utd = db.Column(db.Integer)
+    link_url = db.Column(db.String(64))
+    display_name_prefixed = db.Column(db.String(64))
+    ups = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<project3 %r>' % (self.name)
+
+#from .model import Reddit
 
 #Home Route
 @app.route('/')
@@ -51,7 +64,7 @@ def reddit():
 
     reddit_data = [{
         "hover_text": hover_text,
-        "author.name": author.name,
+        "author.name": author,
         "body": body,
         "created_utd": created_utc,
         "link_url": link_url,

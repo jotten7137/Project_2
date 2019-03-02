@@ -1,5 +1,5 @@
 queue()
-    .defer(d3.json, "//project3/comments")
+    .defer(d3.json, '/api/reddit')
     .await(makeGraphs);
 
 function makeGraphs(error, commentsJson) {
