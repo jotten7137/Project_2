@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="./static/lib/css//bootstrap.min.css">
+  <link rel="stylesheet" href="./static/lib/css/keen-dashboards.css">
+  <link rel="stylesheet" href="./static/lib/css/dc.css">
+  <link rel="stylesheet" href="./static/css/custom.css">
+  
+
+
+</head>
+<body class="application">
+
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="./">Reddit Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+    <div class="row">
+
+      <div class="col-sm-12">
+        <div class="row">
+
+
+          <!-- Time Chart --> 
+          <div class="col-sm-12">
+            <div class="chart-wrapper">
+              <div class="chart-title">
+                Number of Comments
+              </div>
+              <div class="chart-stage">
+                <div id="time-chart"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Time Chart --> 
+
+          <!-- Author Pie -->
+          <div class="col-sm-6">
+            <div class="chart-wrapper">
+              <div class="chart-title">
+                Author
+              </div>
+              <div class="chart-stage">
+                <div id="author-row-chart"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Author Pie -->
+
+          <!-- Subreddit Pie -->
+          <div class="col-sm-6">
+            <div class="chart-wrapper">
+              <div class="chart-title">
+                Subreddit
+              </div>
+              <div class="chart-stage">
+                <div id="subreddit-row-chart"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Subreddit Pie -->
+
+        </div>
+      </div>
+
+
+
+      <!-- Metric 1 -->
+      <div class="col-sm-3">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Total UP
+          </div>
+          <div class="chart-stage">
+            <div id="ups-nd"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Metric 1 -->
+
+
+    </div>
+
+  </div>
+
+    <hr>
+    <p class="small text-muted">Built by</p>
+
+  </div>
+  <script src="./static/lib/js/jquery.min.js"></script>
+  <script src="./static/lib/js/bootstrap.min.js"></script>
+  <script src="./static/lib/js/crossfilter.js"></script>
+  <script src="./static/lib/js/d3.js"></script>
+  <script src="./static/lib/js/dc.js"></script>
+  <script src="./static/lib/js/queue.js"></script>
+
+
+  <script src="./static/lib/js/keen.min.js"></script>
+  <script src="./static/js/app.js" type='text/javascript'></script>
+ 
+</body>
+</html>
