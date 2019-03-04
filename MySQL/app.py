@@ -53,22 +53,28 @@ def send():
 
 @app.route('/api/reddit')
 def reddit():
-    results = db.session.query()
-    hover_text = [result[0] for result in results]
-    author = [result[1] for result in results]
-    body = [request[2] for result in results]
-    created_utc = [request[3] for result in results]
-    link_url = [request[4] for result in results]
-    display_name_prefixed = [request[5] for result in results]
-    ups = [request[6] for result in results]
+    results = db.session.query(
+        Reddit.author, 
+        Reddit.body, 
+        Reddit.created_utc, 
+        Reddit.link_url,
+        Reddit.display_name_prefixed,
+        Reddit.ups).all()
+    #hover_text = [result[0] for result in results]
+    author = [result[0] for result in results]
+    body = [request[1] for result in results]
+    created_utc = [request[2] for result in results]
+    link_url = [request[3] for result in results]
+    display_name_prefixed = [request[4] for result in results]
+    ups = [request[5] for result in results]
 
     reddit_data = [{
-        "hover_text": hover_text,
-        "author.name": author,
+        #"hover_text": hover_text,
+        "author_name": author,
         "body": body,
         "created_utd": created_utc,
         "link_url": link_url,
-        "subreddit.display_name_prefixed": display_name_prefixed,
+        "subreddit_display_name_prefixed": display_name_prefixed,
         "ups": ups,
     }]
     return jsonify(reddit_data)
