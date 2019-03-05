@@ -1,96 +1,63 @@
-queue()
-    .defer(d3.json, "/project3/comments")
-    .await(makeGraphs);
 
-function makeGraphs(error, commentsJson) {
-	if (error) throw error;
-	//Clean projectsJson data
-	var project3Comments = commentsJson;
-	var dateFormat = d3.time.format("%m/%d/%Y");
-		project3Comments.forEach(function(d) {
-			d["created_date"] = dateFormat.parse(d["created_date"]);
-			d["created_date"].setDate(1);
-			d["num_comments"] = +d["num_comments"];
+
+  function buildCharts() {
+	d3.json("/project3/comments").then((data) => {
+	  const author = data.map( x => x.author);
+	  const domain = data.map(x => x.domain);
+	  const subreddit_name = data.map(x=> x.subreddit_name.substring(2,100));
+	  const created_date = data.map(x => x.created_date);
+		const num_comments = data.map(x => x.num_comments);
+		const ups = data.map(x => x.ups);
+		console.log(author)
+		console.log(domain)
+		console.log(subreddit_name)
+		console.log(created_date)
+		console.log(num_comments)
+		console.log(ups);
+    
+	  // Build a Bubble Chart
+	  var bubbleLayout = {
+
+		hovermode: "closest",		
+	  };
+	  var bubbleData = [
+		{
+		  x: created_date,
+		  y: author,
+		  mode: "markers",
+		  marker: {
+			size: 10,
+			color: "blue",
+			colorscale: "Earth"
+		  }
+		}
+	  ];
+  
+	  Plotly.plot("bubble", bubbleData, bubbleLayout);
+  
+	  // Build a Pie Chart
+	  // HINT: You will need to use slice() to grab the top 10 sample_values,
+	  // otu_ids, and labels (10 each).
+	  var pieData = [
+		{
+		  values: num_comments.slice(0, 50),
+		  labels: subreddit_name.slice(0, 50),
+
+		  type: "pie"
+		}
+	  ];
+  
+	  var pieLayout = {
+		width: 750,
+    height: 750,
+		margin: { t: 10, l: 10, r:10, b:10 }
+	  };
+  
+	  Plotly.plot("pie", pieData, pieLayout);
 	});
+  }
+  
+	buildCharts();
 
-
-	//Create a Crossfilter instance
-	var ndx = crossfilter(commentsJson);
-	var all = ndx.groupAll()
-	
-
-	//Define Dimensions
-	var dateDim = ndx.dimension(function(d) { return d["created_date"]; });
-	var authorDim = ndx.dimension(function(d) { return d["author"]; });
-	var subredditDim = ndx.dimension(function(d) { return d["subreddit_name"]; });
-	var domainDim = ndx.dimension(function(d) { return d["domain"]; });
-    var upsDim  = ndx.dimension(function(d) { return d["ups"]; });
-
-	//Calculate metrics
-	var numCommentsByDate = dateDim.group(); 
-	var numCommentsByDomain = bodyDim.group();
-	var numCommentsByAuthor = authorDim.group();
-	var numCommentsBySubreddit = subredditDim.group();
-	var upsByAuthor = authorDim.group().reduceSum(function(d) {
-		return d["ups"];
-	});
-
-
-
-
-	var most_popular_author = upsByAuthor.top(1)[0].value;
-
-	//Define values (to be used in charts)
-	var minDate = dateDim.bottom(1)[0]["created_date"];
-	var maxDate = dateDim.top(1)[0]["created_date"];
-
-    //Charts
-	var timeChart = dc.lineChart("#time-chart");
-	var subredditChart = dc.rowChart("#subreddit-row-chart");
-	var numberCommentsND = dc.numberDisplay("#number-comments-nd");
-	var upsND = dc.numberDisplay("#total-ups-nd");
-	var authorPie = dc.pieChart("#author-pie")
-
-	numberCommentsND
-		.formatNumber(d3.format("d"))
-		.valueAccessor(function(d){return d; })
-		.group(all);
-
-	upsND
-		.formatNumber(d3.format("d"))
-		.valueAccessor(function(d){return d; })
-		.group(ups)
-		.formatNumber(d3.format(".3s"));
-
-	timeChart
-		.width(1850)
-		.height(200)
-		.margins({top: 10, right: 50, bottom: 30, left: 50})
-		.dimension(dateDim)
-		.group(numCommentsByDate)
-		.transitionDuration(500)
-		.x(d3.time.scale().domain([minDate, maxDate]))
-		.elasticY(true)
-		.xAxisLabel("Year")
-		.yAxis().ticks(4);
-
-	authorPie
-    	.width(600)
-	    .height(350)
-	    .innerRadius(35)
-	    .dimension(authorDim)
-	    .group(numCommentsByAuthor)
-
-	subredditChart
-		.width(600)
-		.height(350)
-        .dimension(subredditDim)
-        .group(numCommentsBySubreddit)
-		.xAxis().ticks(4);
-		
-	
-
-
-    dc.renderAll();
-
-};
+ 
+  

@@ -1,115 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!DOCTYPE html>
-<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="../static/lib/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/lib/css/keen-dashboards.css">
-  <link rel="stylesheet" href="../static/lib/css/dc.css">
-  <link rel="stylesheet" href="../static/css/custom.css">
+  <title>Reddit</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  
+</head>
+
+<body>
+   
   
 
-
-</head>
-<body class="application">
-
-  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="./">Reddit Dashboard</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="container-fluid">
-
+  <div class="container">
     <div class="row">
-
-      <div class="col-sm-12">
-        <div class="row">
-
-
-          <!-- Time Chart --> 
-          <div class="col-sm-12">
-            <div class="chart-wrapper">
-              <div class="chart-title">
-                Number of Comments
-              </div>
-              <div class="chart-stage">
-                <div id="time-chart"></div>
-              </div>
-            </div>
-          </div>
-          <!-- Time Chart --> 
-
-          <!-- Author Pie -->
-          <div class="col-sm-6">
-            <div class="chart-wrapper">
-              <div class="chart-title">
-                Author
-              </div>
-              <div class="chart-stage">
-                <div id="author-row-chart"></div>
-              </div>
-            </div>
-          </div>
-          <!-- Author Pie -->
-
-          <!-- Subreddit Pie -->
-          <div class="col-sm-6">
-            <div class="chart-wrapper">
-              <div class="chart-title">
-                Subreddit
-              </div>
-              <div class="chart-stage">
-                <div id="subreddit-row-chart"></div>
-              </div>
-            </div>
-          </div>
-          <!-- Subreddit Pie -->
-
-        </div>
+      <div class="col-md-12 jumbotron text-center">
+        <h1>Reddit Dashboard</h1>
+        <p>Use the interactive charts below to explore the dataset</p>
       </div>
-
-
-
-      <!-- Metric 1 -->
-      <div class="col-sm-3">
-        <div class="chart-wrapper">
-          <div class="chart-title">
-            Total UP
-          </div>
-          <div class="chart-stage">
-            <div id="ups-nd"></div>
-          </div>
-        </div>
+    </div>
+    <div class="row">
+    
+      <div class="col-md-5">
+        <div style="width:100%; height:100%" id="pie"></div>
       </div>
-      <!-- Metric 1 -->
-
 
     </div>
-
   </div>
-
-    <hr>
-    <p class="small text-muted">Built by</p>
-
+<div class="container" style="margin-bottom:20px; margin-left:20px">
+  
+  <div class="row">
+    <div  class="col-md-12">
+      <div id="bubble"></div>
+      <label style="text-align: center; margin-left:40%; font-weight: bold">Most Active Time of Year</label>
+    </div>
   </div>
-  <script src="../static/lib/js/jquery.min.js"></script>
-  <script src="../static/lib/js/bootstrap.min.js"></script>
-  <script src="../static/lib/js/crossfilter.js"></script>
-  <script src="../static/lib/js/d3.js"></script>
-  <script src="../static/lib/js/dc.js"></script>
-  <script src="../static/lib/js/queue.js"></script>
+</div>
 
+  <div class="row">
+    <div class="col-md-12">
+      <div id="bar">
+          <div class="chart-stage">
+              <div id="time-chart"></div>
+            <label style='text-align:center;margin-left:40%; font-weight: bold'>User Comment Count</label>
+            <!--Load d3.js library-->
+            <script src ="../static/lib/js/d3.v4.min.js"></script>
+            <script>
+              //set dimensions and margins of graph
+              var margin = {top: 20, right: 20, bottom: 30, left: 40},
+                            width = 960 - margin.left - margin.right,
+                            height = 500 - margin.top - margin.bottom;
+              //ranges
+              var x = d3.scaleBand()
+                        .range([0, width])
+                        .padding(0.1);
+              var y = d3.scaleLinear()
+                        .range([height, 0]);
+              //append svg object to body of page
+              var svg = d3.select("body")
+                          .append("svg")
+                          .attr("width", width + margin.left + margin.right)
+                          .attr("height", height + margin.top + margin.bottom)
+                          .append("g")
+                          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+              //data input
+              d3.json("/project3/comments", function(error,data){
+                if (error) throw error;
+                //data format
+                data.forEach(function(d){
+                  d.num_comment = +d.num_comment;
+                });
 
-  <script src="./static/lib/js/keen.min.js"></script>
-  <script src="./static/js/app.js" type='text/javascript'></script>
+                //Scale the range of the data
+                x.domain(data.map(function(d){return d.author}))
+                y.domain([0,de.max(data.map(function(d){return d.comment}))]);
+              
+                //Append teh rectangles for bar chart
+                svg .selectAll('.bar')
+                    .data(data)
+                    .enter().append('rect')
+                    .attr("class","bar")
+                    .attr('x',function(d){return x(d.author);})
+                    .attr('width', x.bandwidth())
+                    .attr('y',function(d){return y(d.num_comment);})
+                    .attr('height', function(d){return height - y(d.sales);
+                    //add the x Axis
+                    svg .append("g")
+                        .attr('transform','translate(0,'+height+ ")")
+                        .call(d3.axisBottom(x));
+                    //add the y Axis
+                    svg .append("g")
+                        .call(d3.axisLeft(y));
+                    })
+              });
+            </script>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
  
+
+
+  <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src='../static/js/app.js' type='text/javascript'></script>
+
 </body>
+
 </html>
